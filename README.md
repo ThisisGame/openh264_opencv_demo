@@ -7,6 +7,8 @@ openh264编码图片为H264视频demo 解压H264为图片Demo
 
 opencv官网 https://opencv.org/releases/
 
+安装后添加到Path环境变量 例如  `C:\Users\captainchen\Downloads\opencv\build\bin`
+
 修改vs项目的头文件目录 和 dll目录为自己opencv目录即可。
 
 F5运行
