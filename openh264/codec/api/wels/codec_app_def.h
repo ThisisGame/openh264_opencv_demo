@@ -488,14 +488,18 @@ typedef struct {
 } SSpatialLayerConfig;
 
 /**
-* @brief Encoder usage type
+* @brief 编码器的使用类型
+* @note 不同的 iUsageType 会影响编码器的行为和编码结果。
+例如，对于实时视频，编码器可能会优先考虑编码速度和实时性，而牺牲一些编码效率；
+而对于非实时视频，编码器可能会优先考虑编码效率和视频质量，而牺牲一些编码速度。
+因此，选择合适的 iUsageType 可以根据具体的应用场景，优化编码器的性能和编码结果。
 */
 typedef enum {
-  CAMERA_VIDEO_REAL_TIME,      ///< camera video for real-time communication
-  SCREEN_CONTENT_REAL_TIME,    ///< screen content signal
-  CAMERA_VIDEO_NON_REAL_TIME,
-  SCREEN_CONTENT_NON_REAL_TIME,
-  INPUT_CONTENT_TYPE_ALL,
+  CAMERA_VIDEO_REAL_TIME,      ///< 实时摄像头视频，适用于实时通信场景，如视频聊天。
+  SCREEN_CONTENT_REAL_TIME,    ///< 实时屏幕内容信号，适用于实时屏幕共享或录制场景。
+  CAMERA_VIDEO_NON_REAL_TIME,  ///< 非实时摄像头视频，适用于非实时的视频处理或存储场景。
+  SCREEN_CONTENT_NON_REAL_TIME,///< 非实时屏幕内容信号，适用于非实时的屏幕内容处理或存储场景。
+  INPUT_CONTENT_TYPE_ALL,      ///< 所有输入内容类型，适用于需要处理各种类型输入内容的场景。
 } EUsageType;
 
 /**
