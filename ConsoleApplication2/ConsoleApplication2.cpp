@@ -29,6 +29,8 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
+#define MiniYUV 0
+
 using namespace std;
 using namespace cv;
 
@@ -64,6 +66,7 @@ int main()
 
     t = (double)cv::getTickCount();  // 开始计时
 
+#if MiniYUV
     Mat imageResized, imageYuv, imageYuvMini; 
     resize(image, imageResized, Size(width, height));// 调整图片大小
     Mat imageYuvCh[3], imageYuvMiniCh[3];
@@ -79,6 +82,15 @@ int main()
 
     //最后，再次使用 split 函数将调整大小后的图片的三个通道分离，以便于后续的编码操作。
     split(imageYuvMini, imageYuvMiniCh);
+#else
+    Mat imageYuv;
+    Mat imageYuvCh[3];
+
+    cvtColor(image, imageYuv, cv::COLOR_BGR2YUV);// 将图片转换为YUV格式
+    split(imageYuv, imageYuvCh);
+#endif
+
+    
 
     t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();  // 计算经过的时间
     cout << "cvtcolor cost: " << t << endl;
@@ -147,12 +159,22 @@ int main()
 		    pic.iPicWidth = width;  // 设置图片的宽度
 		    pic.iPicHeight = height;  // 设置图片的高度
 		    pic.iColorFormat = videoFormatI420;  // 设置图片的颜色格式为I420
+
+#if MiniYUV
 	        pic.iStride[0] = imageYuvCh[0].step;  // 设置Y通道的步长
 		    pic.iStride[1] = imageYuvMiniCh[1].step;  // 设置U通道的步长
 		    pic.iStride[2] = imageYuvMiniCh[2].step;  // 设置V通道的步长
 		    pic.pData[0] = imageYuvCh[0].data;  // 设置Y通道的数据指针
 		    pic.pData[1] = imageYuvMiniCh[1].data;  // 设置U通道的数据指针
 		    pic.pData[2] = imageYuvMiniCh[2].data;  // 设置V通道的数据指针
+#else
+            pic.iStride[0] = imageYuvCh[0].step;  // 设置Y通道的步长
+		    pic.iStride[1] = imageYuvCh[1].step;  // 设置U通道的步长
+		    pic.iStride[2] = imageYuvCh[2].step;  // 设置V通道的步长
+		    pic.pData[0] = imageYuvCh[0].data;  // 设置Y通道的数据指针
+		    pic.pData[1] = imageYuvCh[1].data;  // 设置U通道的数据指针
+		    pic.pData[2] = imageYuvCh[2].data;  // 设置V通道的数据指针
+#endif
         }
         else//使用重复帧，而不是使用空帧，即直接使用上一帧的数据
         {
