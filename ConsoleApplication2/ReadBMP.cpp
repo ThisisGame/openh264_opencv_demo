@@ -33,7 +33,7 @@
 using namespace std;
 using namespace cv;
 
-int main_t()
+int main()
 {
     // 创建H264编码器实例
     ISVCEncoder *encoder_ = nullptr;
@@ -71,6 +71,12 @@ int main_t()
     Mat imageYuvCh[3], imageYuvMiniCh[3];
     cvtColor(imageResized, imageYuv, cv::COLOR_BGR2YUV);// 将图片转换为YUV格式
 
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();  // 计算经过的时间
+    cout << "cvtcolor cost: " << t << endl;
+
+
+    t = (double)cv::getTickCount();  // 开始计时
+
     //首先，split 函数用于将图片的三个通道（Y、U、V）分离。
     //这是因为在YUV格式中，Y通道（亮度）包含了大部分的视觉信息，而U和V通道（色度）的信息可以降采样以减少数据量。
     split(imageYuv, imageYuvCh);
@@ -86,7 +92,7 @@ int main_t()
     
 
     t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();  // 计算经过的时间
-    cout << "cvtcolor cost: " << t << endl;
+    cout << "yuv444 to yuv420 cost: " << t << endl;
 
     
 
