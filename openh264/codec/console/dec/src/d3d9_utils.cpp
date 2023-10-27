@@ -622,24 +622,38 @@ int CUtils::CheckOS() {
   return iType;
 }
 
+/**
+ * @brief 将解码后的帧数据写入到文件中。
+ * @param pFp 指向输出文件的指针。
+ * @param pData 存储解码后的帧数据的数组，包括Y（亮度）分量、U（色差）分量和V（色差）分量。
+ * @param iStride 存储Y分量和UV分量的步长的数组。
+ * @param iWidth 解码后的帧的宽度。
+ * @param iHeight 解码后的帧的高度。
+ * @note 这个函数首先将Y分量的数据写入到文件中，然后将U分量和V分量的数据写入到文件中。在写入U分量和V分量的数据时，宽度和高度都被除以2，因为在YUV420格式中，U分量和V分量的宽度和高度都是Y分量的一半。
+ */
 void Write2File (FILE* pFp, unsigned char* pData[3], int iStride[2], int iWidth, int iHeight) {
   int   i;
   unsigned char*  pPtr = NULL;
 
+  // 写入Y分量的数据
   pPtr = pData[0];
   for (i = 0; i < iHeight; i++) {
     fwrite (pPtr, 1, iWidth, pFp);
     pPtr += iStride[0];
   }
 
+  // 更新宽度和高度
   iHeight = iHeight / 2;
   iWidth = iWidth / 2;
+
+  // 写入U分量的数据
   pPtr = pData[1];
   for (i = 0; i < iHeight; i++) {
     fwrite (pPtr, 1, iWidth, pFp);
     pPtr += iStride[1];
   }
 
+  // 写入V分量的数据
   pPtr = pData[2];
   for (i = 0; i < iHeight; i++) {
     fwrite (pPtr, 1, iWidth, pFp);
